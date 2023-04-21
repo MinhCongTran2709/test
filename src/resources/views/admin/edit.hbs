@@ -1,0 +1,23 @@
+<div class="mt-4">
+    <h3>Cập nhật món ăn</h3>
+
+    <form method="post" action="/admin/{{pizza._id}}?_method=PUT">
+       
+        <div class="form-group">
+            <label for="name">ten</label>
+            <input type="text" class="form-control" value="{{pizza.name}}" id="name" name="name">
+        </div>
+        
+        <div class="form-group">
+            <label for="image">Hinh</label>
+            <input type="text" class="form-control" value="{{pizza.image}}" id="image" name="image">
+        </div>
+        
+        <div class="form-group">
+            <label for="price">Gia</label>
+            <input type="text" class="form-control" value="{{pizza.price}}" id="price" name="price">
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Lưu</button>
+    </form>
+</div>

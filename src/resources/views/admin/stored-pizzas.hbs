@@ -1,0 +1,153 @@
+<form class="mt-4" name="container-form" method="POST" action="/admin/handle-form-actions">
+    <h1>Danh sach pizzas</h1>
+    <a href="/admin/trash-pizzas">Thung rac ({{deleteCount}}) </a>
+
+    <div class="mt-4 mb-4 d-flex align-items-center">
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" id="checkbox-all">
+            <label class="form-check-label" for="checkbox-all">
+                Chon tat ca
+            </label>
+        </div>
+        <select class="form-control form-control-sm checkbox-select-all-options" name="action" required="required" >
+            <option value="">-- Chon hanh dong --</option>
+            <option value="delete">Xoa</option>
+
+        </select>
+        <button class="btn btn-primary btn-sm btn-checkall-submit" disabled="disabled">Thuc hien</button>
+
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <td></td>
+                <th scope="col">#</th>
+                <th scope="col">Ten</th>
+                <th scope="col">Hinh</th>
+                <th scope="col" colspan="3">Gia</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each pizzas}}
+            <tr>
+                <th>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="{{this._id}}" name="pizzasId" id="defaultCheck1">
+
+                    </div>
+                </th>
+                <th scope="row">{{sum @index 1}}</th>
+                <td>{{this.name}}</td>
+                <td><img src="{{this.image}}" width="90px" height="60px"></td>
+                <td>{{this.price}}</td>
+                <td><a href="/admin/{{this._id}}/edit" class="btn btn-link">Sua</a></td>
+                <td><a href="" class="btn btn-link" data-toggle="modal" data-id="{{this._id}}"
+                        data-target="#delete-product">Xoa</a></td>
+            </tr>
+            {{else}}
+            <tr>
+                <td colspan="5" class="text-center">
+                    Ban chua dang san pham.
+                    <a href="/admin/create">Dang san pham</a>
+                </td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</form>
+
+{{!-- confirm delete product --}}
+<div id="delete-product" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Xoa san pham</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Ban chac chan mon xoa san pham nay khong</p>
+            </div>
+            <div class="modal-footer">
+                <button id="btn-delete" type="button" class="btn btn-danger">Xoa</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Huy</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{!-- delete hidden form --}}
+<form name="delete-product-form" method="post">
+
+</form>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var productId;
+        var deleteForm = document.forms['delete-product-form'];
+        var btnDelete = document.getElementById('btn-delete');
+        var checkboxAll = $('#checkbox-all');
+        var pizzaItemCheckBox = $('input[name="pizzasId"]');
+        var BtnCheckAllSubmit = $('.btn-checkall-submit');        
+        var containerForm = $('form[name="container-form"]');
+       
+
+        $('#delete-product').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget) // Button that triggered the modal
+            productId = button.data('id')
+
+        });
+
+        btnDelete.onclick = function () {
+            deleteForm.action = '/admin/' + productId + '?_method=DELETE';
+            deleteForm.submit();
+        };
+
+        checkboxAll.change(function () {
+            var isCheckedAll = ($(this).prop('checked'));
+            pizzaItemCheckBox.prop('checked', isCheckedAll);
+            renderBtnCheckAllSubmit();
+        });
+
+        pizzaItemCheckBox.change(function () {
+            var isCheckedAll = pizzaItemCheckBox.length === $('input[name="pizzasId"]:checked').length;
+            //console.log(isCheckedAll);
+            checkboxAll.prop('checked', isCheckedAll);
+            renderBtnCheckAllSubmit();
+        });
+
+        // check all submit button clicked
+        BtnCheckAllSubmit.click(function (event) {
+            event.preventDefault();
+            var isSubmittable = !$(this).hasClass('disabled');
+
+            if (isSubmittable) {
+                containerForm.submit();
+            }
+        });
+
+       /* containerForm.on('submit', function (event) {            
+            var isSubmittable = !BtnCheckAllSubmit.hasClass('disabled');
+            if (!isSubmittable) {
+                event.preventDefault();
+            }
+        });
+        */
+
+        function renderBtnCheckAllSubmit() {
+            var checkedCount = $('input[name="pizzasId"]:checked').length;
+            if (checkedCount > 0) {
+                BtnCheckAllSubmit.removeAttr('disabled', false);
+            }
+            else {
+                BtnCheckAllSubmit.attr('disabled', true);
+            }
+            console.log(BtnCheckAllSubmit);
+
+        }
+
+    });
+
+</script>

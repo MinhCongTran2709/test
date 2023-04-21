@@ -1,0 +1,33 @@
+<div class="mt-4">
+    <h3>Đăng món ăn</h3>
+
+    <form method="post" action="/admin/store">
+
+        <div class="form-group">
+            <label for="name">ten</label>
+            <input type="text" class="form-control" id="name" name="name">
+        </div>
+
+        <div class="form-group">
+            <label for="image">Hinh</label>
+            <input type="text" class="form-control" id="image" name="image">
+        </div>
+
+        <div class="form-group">
+            <label for="price">Gia</label>
+            <input type="text" class="form-control" id="price" name="price">
+        </div>
+
+        <div class="form-group">
+            <label for=""></label>            
+            <select class="form-control" id="category" name="category">
+                <option value="">Loai san pham</option>
+                <option value="pizza">Pizza</option>
+                <option value="side">Side</option>
+            </select>
+
+        </div>
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
